@@ -36,8 +36,8 @@ func main() {
 		log.Fatal("can't iterate over commits: %w", err)
 	}
 
-	if len(times) == 0 {
-		log.Fatal("no commit")
+	if len(times) < 2 {
+		log.Fatal("not enough commits")
 	}
 
 	sort.Slice(times, func(i, j int) bool {

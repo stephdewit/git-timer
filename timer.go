@@ -24,7 +24,11 @@ func main() {
 
 	err = commits.ForEach(func(c *object.Commit) error {
 		times = append(times, c.Author.When)
-		times = append(times, c.Committer.When)
+
+		if c.Author.When != c.Committer.When {
+			times = append(times, c.Committer.When)
+		}
+
 		return nil
 	})
 

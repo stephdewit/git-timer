@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"sort"
+	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -18,12 +20,25 @@ func main() {
 		log.Fatal("can't get repository log: %w", err)
 	}
 
+	times := make([]time.Time, 0, 10)
+
 	err = commits.ForEach(func(c *object.Commit) error {
-		log.Print(c)
+		times = append(times, c.Author.When)
+		times = append(times, c.Committer.When)
 		return nil
 	})
 
 	if err != nil {
 		log.Fatal("can't iterate over commits: %w", err)
 	}
+
+	if len(times) == 0 {
+		log.Fatal("no commit")
+	}
+
+	sort.Slice(times, func(i, j int) bool {
+		return times[i].Before(times[j])
+	})
+
+	log.Print(times)
 }
